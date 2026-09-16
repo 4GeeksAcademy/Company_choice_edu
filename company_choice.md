@@ -28,8 +28,8 @@ El principal desafío de automatización es desarrollar una revisión asistida p
 
 ### Agente de IA para Operaciones Clínicas
 
-Propondría un Agente de IA que ayude a los profesionales sanitarios con la documentación clínica. Tendría acceso a la información de las consultas y a los registros de los pacientes mediante la API unificada de los sistemas EHR, y generaría un borrador de documentación estructurada. También podría detectar información incompleta o inconsistente y generar una alerta para que el profesional la revise y valide.
+El agente recibe la información de la consulta y accede a los datos del paciente y a su historial clínico mediante la API unificada de los sistemas EHR. Analiza y estructura la información, identifica los elementos necesarios para la documentación clínica y genera un borrador estructurado de la consulta. A continuación, detecta información incompleta o inconsistente, genera una alerta y envía el resultado al profesional sanitario para su revisión y validación antes de incorporarlo al sistema.
 
 ### Agente de IA para Ciclo de Ingresos y Facturación
 
-Propondría un Agente de IA que revise las reclamaciones antes de ser enviadas a las aseguradoras. Tendría acceso a los datos de la atención, documentación clínica y datos necesarios para la facturación, analizaría posibles errores o inconsistencias y generaría una alerta cuando detectara riesgo de rechazo. El agente podría interactuar con el sistema de facturación para devolver la reclamación para revisión humana antes de su envío.
+El agente recibe los datos de la atención y accede a la documentación clínica y a la información necesaria para la facturación. Analiza y clasifica los datos de la reclamación, valida la información y detecta posibles inconsistencias o factores asociados a un riesgo de rechazo. Cuando identifica un problema, genera una alerta y devuelve la reclamación para revisión del equipo de facturación antes de su envío, registrando además el resultado para facilitar el análisis posterior de los rechazos.
