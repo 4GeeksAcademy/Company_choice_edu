@@ -1,6 +1,6 @@
 # Taxonomía propuesta de incidencias
 
-Esta taxonomía se define para el primer gestor de incidencias de HealthCore. Los valores no estaban incluidos en `CONTEXT.md`; son una decisión de producto basada en los departamentos, riesgos y problemas descritos allí.
+Esta taxonomía se define para el primer gestor de incidencias de HealthCore. Los valores se aprobaron como decisión de producto basada en `CONTEXT.md` y se registran como catálogo oficial del gestor en `CONTEXT-company.md`.
 
 ## Tipos de incidencia
 
