@@ -6,6 +6,7 @@ from .models import (
     IncidentArea,
     IncidentAuditEvent,
     IncidentCreate,
+    IncidentSeverity,
     IncidentStatus,
 )
 
@@ -36,8 +37,30 @@ class IncidentStore:
     def get(self, incident_id: str) -> Incident | None:
         return self._incidents.get(incident_id)
 
-    def list_all(self) -> list[Incident]:
-        return list(self._incidents.values())
+    def list_all(
+        self,
+        status: IncidentStatus | None = None,
+        severity: IncidentSeverity | None = None,
+        responsible_area: IncidentArea | None = None,
+    ) -> list[Incident]:
+        incidents = list(self._incidents.values())
+        return [
+            incident
+            for incident in incidents
+            if (status is None or incident.status == status)
+            and (severity is None or incident.severity == severity)
+            and (
+                responsible_area is None
+                or incident.responsible_area == responsible_area
+            )
+        ]
+
+    def open_by_severity(self) -> dict[IncidentSeverity, int]:
+        summary = {severity: 0 for severity in IncidentSeverity}
+        for incident in self._incidents.values():
+            if incident.status != IncidentStatus.closed:
+                summary[incident.severity] += 1
+        return summary
 
     def update_status(
         self, incident_id: str, status: IncidentStatus, changed_by: str

@@ -3,9 +3,12 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .models import (
     Incident,
+    IncidentArea,
     IncidentAreaUpdate,
     IncidentAuditEvent,
     IncidentCreate,
+    IncidentSeverity,
+    IncidentStatus,
     IncidentStatusUpdate,
 )
 from .store import IncidentStore
@@ -40,8 +43,20 @@ def create_incident(payload: IncidentCreate) -> Incident:
 
 
 @app.get("/incidents", response_model=list[Incident])
-def list_incidents() -> list[Incident]:
-    return store.list_all()
+def list_incidents(
+    status: IncidentStatus | None = None,
+    severity: IncidentSeverity | None = None,
+    responsible_area: IncidentArea | None = None,
+) -> list[Incident]:
+    return store.list_all(status, severity, responsible_area)
+
+
+@app.get("/incidents/summary/open-by-severity")
+def open_incidents_by_severity() -> dict[str, int]:
+    return {
+        severity.value: count
+        for severity, count in store.open_by_severity().items()
+    }
 
 
 @app.get("/incidents/{incident_id}", response_model=Incident)

@@ -24,6 +24,12 @@ class IncidentWorkflowTest(unittest.TestCase):
         listing = client.get("/incidents")
         self.assertEqual(listing.status_code, 200)
         self.assertEqual(len(listing.json()), 1)
+        filtered = client.get("/incidents", params={"severity": "high"})
+        self.assertEqual(filtered.status_code, 200)
+        self.assertEqual(len(filtered.json()), 1)
+        summary = client.get("/incidents/summary/open-by-severity")
+        self.assertEqual(summary.status_code, 200)
+        self.assertEqual(summary.json()["high"], 1)
 
         status_update = client.patch(
             f"/incidents/{incident_id}/status",
