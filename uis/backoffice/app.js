@@ -57,13 +57,22 @@ async function showDetail(id) {
   if (!incident) return;
   const response = await fetch(`${API_URL}/incidents/${id}/audit`);
   const audit = response.ok ? await response.json() : [];
-  document.querySelector("#detail-content").innerHTML = `<div class="detail-header"><p class="eyebrow">Detalle de incidencia</p><h3>${escapeHtml(incident.title)}</h3><div class="detail-meta"><span class="badge badge-${incident.severity}">${labels.severity[incident.severity]}</span><span class="badge badge-medium">${labels.status[incident.status]}</span></div></div><p class="detail-label">Descripción</p><p class="detail-description">${escapeHtml(incident.description)}</p><p class="detail-label">Estado</p><select class="detail-select" id="detail-status"><option value="new">Nueva</option><option value="triaged">Clasificada</option><option value="assigned">Asignada</option><option value="in-progress">En progreso</option><option value="blocked">Bloqueada</option><option value="resolved">Resuelta</option><option value="closed">Cerrada</option></select><p class="detail-label">Historial de auditoría</p>${audit.length ? audit.map((event) => `<div class="audit-item"><strong>${event.field === "status" ? "Estado actualizado" : "Área responsable actualizada"}</strong><small>${event.previous_value || "Sin asignar"} → ${event.new_value} · ${event.changed_by}</small></div>`).join("") : `<p class="detail-description">Sin cambios registrados.</p>`}`;
+  document.querySelector("#detail-content").innerHTML = `<div class="detail-header"><p class="eyebrow">Detalle de incidencia</p><h3>${escapeHtml(incident.title)}</h3><div class="detail-meta"><span class="badge badge-${incident.severity}">${labels.severity[incident.severity]}</span><span class="badge badge-medium">${labels.status[incident.status]}</span></div></div><p class="detail-label">Descripción</p><p class="detail-description">${escapeHtml(incident.description)}</p><p class="detail-label">Estado</p><select class="detail-select" id="detail-status"><option value="new">Nueva</option><option value="triaged">Clasificada</option><option value="assigned">Asignada</option><option value="in-progress">En progreso</option><option value="blocked">Bloqueada</option><option value="resolved">Resuelta</option><option value="closed">Cerrada</option></select><p class="detail-label">Área responsable</p><select class="detail-select" id="detail-area"><option value="">Sin asignar</option><option value="clinical-operations">Operaciones clínicas</option><option value="patient-access">Experiencia del paciente</option><option value="billing-revenue">Facturación e ingresos</option><option value="compliance-data">Cumplimiento y datos</option><option value="workforce">Personas</option><option value="technology">Tecnología</option><option value="executive">Dirección ejecutiva</option></select><p class="detail-label">Historial de auditoría</p>${audit.length ? audit.map((event) => `<div class="audit-item"><strong>${event.field === "status" ? "Estado actualizado" : "Área responsable actualizada"}</strong><small>${event.previous_value || "Sin asignar"} → ${event.new_value} · ${event.changed_by} · ${formatDateTime(event.changed_at)}</small></div>`).join("") : `<p class="detail-description">Sin cambios registrados.</p>`}`;
   document.querySelector("#detail-status").value = incident.status;
   document.querySelector("#detail-status").addEventListener("change", (event) => updateStatus(id, event.target.value));
+  document.querySelector("#detail-area").value = incident.responsible_area || "";
+  document.querySelector("#detail-area").addEventListener("change", (event) => updateArea(id, event.target.value));
 }
 
 async function updateStatus(id, status) {
   await fetch(`${API_URL}/incidents/${id}/status`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ status, changed_by: "operations-user" }) });
+  await loadIncidents();
+  await showDetail(id);
+}
+
+async function updateArea(id, responsibleArea) {
+  if (!responsibleArea) return;
+  await fetch(`${API_URL}/incidents/${id}/responsible-area`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ responsible_area: responsibleArea, changed_by: "operations-user" }) });
   await loadIncidents();
   await showDetail(id);
 }
@@ -87,6 +96,7 @@ document.querySelector("#new-incident-button").addEventListener("click", () => d
 document.querySelector("#close-detail").addEventListener("click", () => document.querySelector("#detail-content").innerHTML = `<div class="detail-placeholder"><span>→</span><p>Selecciona una incidencia para revisar sus detalles y trazabilidad.</p></div>`);
 
 function formatDate(value) { return new Date(value).toLocaleDateString("es-ES", { day: "2-digit", month: "short" }); }
+function formatDateTime(value) { return new Date(value).toLocaleString("es-ES", { dateStyle: "short", timeStyle: "short" }); }
 function escapeHtml(value) { return String(value).replace(/[&<>'"]/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#039;", '"': "&quot;" }[character])); }
 
 loadIncidents();
