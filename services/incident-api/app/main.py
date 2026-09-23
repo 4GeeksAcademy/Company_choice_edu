@@ -29,6 +29,11 @@ def create_incident(payload: IncidentCreate) -> Incident:
     return store.create(payload)
 
 
+@app.get("/incidents", response_model=list[Incident])
+def list_incidents() -> list[Incident]:
+    return store.list_all()
+
+
 @app.get("/incidents/{incident_id}", response_model=Incident)
 def get_incident(incident_id: str) -> Incident:
     incident = store.get(incident_id)

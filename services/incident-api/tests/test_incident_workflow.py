@@ -21,6 +21,10 @@ class IncidentWorkflowTest(unittest.TestCase):
         self.assertEqual(created.status_code, 201)
         incident_id = created.json()["id"]
 
+        listing = client.get("/incidents")
+        self.assertEqual(listing.status_code, 200)
+        self.assertEqual(len(listing.json()), 1)
+
         status_update = client.patch(
             f"/incidents/{incident_id}/status",
             json={"status": "in-progress", "changed_by": "user-1"},

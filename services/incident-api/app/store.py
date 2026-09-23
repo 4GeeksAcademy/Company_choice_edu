@@ -36,6 +36,9 @@ class IncidentStore:
     def get(self, incident_id: str) -> Incident | None:
         return self._incidents.get(incident_id)
 
+    def list_all(self) -> list[Incident]:
+        return list(self._incidents.values())
+
     def update_status(
         self, incident_id: str, status: IncidentStatus, changed_by: str
     ) -> Incident | None:
