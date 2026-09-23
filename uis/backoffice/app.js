@@ -1,5 +1,13 @@
-const API_URL = "http://localhost:8000";
+const API_URL = getApiUrl();
 let incidents = [];
+
+function getApiUrl() {
+  const host = window.location.hostname;
+  if (host.endsWith(".app.github.dev") || host.endsWith(".github.dev")) {
+    return `${window.location.protocol}//${host.replace(/-\d+(?=\.)/, "-8000")}`;
+  }
+  return "http://localhost:8000";
+}
 
 const labels = {
   status: { new: "Nueva", triaged: "Clasificada", assigned: "Asignada", "in-progress": "En progreso", blocked: "Bloqueada", resolved: "Resuelta", closed: "Cerrada" },
