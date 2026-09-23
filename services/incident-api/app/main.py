@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException, status
+from fastapi.middleware.cors import CORSMiddleware
 
 from .models import (
     Incident,
@@ -14,6 +15,14 @@ app = FastAPI(
     title="HealthCore Incident API",
     version="0.1.0",
     description="API for the centralized operational incident manager.",
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:4173", "http://127.0.0.1:4173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 store = IncidentStore()
