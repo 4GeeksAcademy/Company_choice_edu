@@ -21,6 +21,10 @@ class IncidentWorkflowTest(unittest.TestCase):
         self.assertEqual(created.status_code, 201)
         incident_id = created.json()["id"]
 
+        detail = client.get(f"/incidents/{incident_id}")
+        self.assertEqual(detail.status_code, 200)
+        self.assertEqual(detail.json()["id"], incident_id)
+
         edited = client.patch(
             f"/incidents/{incident_id}",
             json={"title": "EHR unavailable in London", "severity": "critical"},
@@ -47,14 +51,32 @@ class IncidentWorkflowTest(unittest.TestCase):
             f"/incidents/{incident_id}/responsible-area",
             json={"responsible_area": "technology", "changed_by": "user-2"},
         )
+        status_filtered = client.get(
+            "/incidents", params={"status": "in-progress"}
+        )
+        area_filtered = client.get(
+            "/incidents", params={"responsible_area": "technology"}
+        )
+        closed = client.patch(
+            f"/incidents/{incident_id}/status",
+            json={"status": "closed", "changed_by": "user-3"},
+        )
         audit = client.get(f"/incidents/{incident_id}/audit")
+        closed_summary = client.get("/incidents/summary/open-by-severity")
 
         self.assertEqual(status_update.status_code, 200)
         self.assertEqual(area_update.status_code, 200)
+        self.assertEqual(len(status_filtered.json()), 1)
+        self.assertEqual(len(area_filtered.json()), 1)
+        self.assertEqual(closed.status_code, 200)
+        self.assertEqual(closed.json()["status"], "closed")
         self.assertEqual(audit.status_code, 200)
-        self.assertEqual(len(audit.json()), 2)
+        self.assertEqual(len(audit.json()), 3)
         self.assertEqual(audit.json()[0]["changed_by"], "user-1")
         self.assertEqual(audit.json()[1]["changed_by"], "user-2")
+        self.assertEqual(audit.json()[2]["changed_by"], "user-3")
+        self.assertIsNotNone(audit.json()[2]["changed_at"])
+        self.assertEqual(closed_summary.json()["critical"], 0)
 
 
 if __name__ == "__main__":
