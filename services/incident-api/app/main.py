@@ -10,6 +10,7 @@ from .models import (
     IncidentSeverity,
     IncidentStatus,
     IncidentStatusUpdate,
+    IncidentUpdate,
 )
 from .store import IncidentStore
 
@@ -62,6 +63,14 @@ def open_incidents_by_severity() -> dict[str, int]:
 @app.get("/incidents/{incident_id}", response_model=Incident)
 def get_incident(incident_id: str) -> Incident:
     incident = store.get(incident_id)
+    if incident is None:
+        raise HTTPException(status_code=404, detail="Incident not found")
+    return incident
+
+
+@app.patch("/incidents/{incident_id}", response_model=Incident)
+def update_incident(incident_id: str, payload: IncidentUpdate) -> Incident:
+    incident = store.update(incident_id, payload)
     if incident is None:
         raise HTTPException(status_code=404, detail="Incident not found")
     return incident

@@ -58,6 +58,14 @@ class IncidentCreate(BaseModel):
     responsible_area: IncidentArea | None = None
 
 
+class IncidentUpdate(BaseModel):
+    title: str | None = None
+    description: str | None = None
+    type: IncidentType | None = None
+    severity: IncidentSeverity | None = None
+    channel: IncidentChannel | None = None
+
+
 class Incident(BaseModel):
     id: str
     title: str

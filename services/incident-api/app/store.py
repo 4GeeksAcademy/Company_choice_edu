@@ -8,6 +8,7 @@ from .models import (
     IncidentCreate,
     IncidentSeverity,
     IncidentStatus,
+    IncidentUpdate,
 )
 
 
@@ -36,6 +37,15 @@ class IncidentStore:
 
     def get(self, incident_id: str) -> Incident | None:
         return self._incidents.get(incident_id)
+
+    def update(self, incident_id: str, payload: IncidentUpdate) -> Incident | None:
+        incident = self.get(incident_id)
+        if incident is None:
+            return None
+        for field, value in payload.model_dump(exclude_none=True).items():
+            setattr(incident, field, value)
+        incident.updated_at = datetime.now(timezone.utc)
+        return incident
 
     def list_all(
         self,

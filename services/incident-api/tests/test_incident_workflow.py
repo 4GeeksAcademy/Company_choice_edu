@@ -21,15 +21,23 @@ class IncidentWorkflowTest(unittest.TestCase):
         self.assertEqual(created.status_code, 201)
         incident_id = created.json()["id"]
 
+        edited = client.patch(
+            f"/incidents/{incident_id}",
+            json={"title": "EHR unavailable in London", "severity": "critical"},
+        )
+        self.assertEqual(edited.status_code, 200)
+        self.assertEqual(edited.json()["title"], "EHR unavailable in London")
+        self.assertEqual(edited.json()["severity"], "critical")
+
         listing = client.get("/incidents")
         self.assertEqual(listing.status_code, 200)
         self.assertEqual(len(listing.json()), 1)
-        filtered = client.get("/incidents", params={"severity": "high"})
+        filtered = client.get("/incidents", params={"severity": "critical"})
         self.assertEqual(filtered.status_code, 200)
         self.assertEqual(len(filtered.json()), 1)
         summary = client.get("/incidents/summary/open-by-severity")
         self.assertEqual(summary.status_code, 200)
-        self.assertEqual(summary.json()["high"], 1)
+        self.assertEqual(summary.json()["critical"], 1)
 
         status_update = client.patch(
             f"/incidents/{incident_id}/status",
