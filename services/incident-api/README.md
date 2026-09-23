@@ -25,21 +25,24 @@ La documentación interactiva estará disponible en `http://127.0.0.1:8000/docs`
 
 - `GET /health`: comprueba que el servicio está disponible.
 - `POST /incidents`: registra una incidencia.
+- `GET /incidents`: lista incidencias y permite filtrar por `status`, `severity` y `responsible_area`.
+- `GET /incidents/summary/open-by-severity`: devuelve el volumen de incidencias abiertas por gravedad.
 - `GET /incidents/{incident_id}`: consulta una incidencia.
+- `PATCH /incidents/{incident_id}`: edita título, descripción, tipo, gravedad y canal.
 - `PATCH /incidents/{incident_id}/status`: cambia su estado y registra el actor y la fecha.
 - `PATCH /incidents/{incident_id}/responsible-area`: cambia el área responsable y registra el actor y la fecha.
 - `GET /incidents/{incident_id}/audit`: devuelve el historial de cambios.
 
 Los datos se almacenan temporalmente en memoria y se pierden al reiniciar el servicio.
 
-## Prueba funcional
+## Pruebas
 
 Con el entorno virtual activado, desde esta carpeta:
 
 ```bash
-python -c "from fastapi.testclient import TestClient; from app.main import app; client=TestClient(app); response=client.get('/health'); assert response.status_code == 200; print(response.json())"
+python -m unittest discover -s tests -v
 ```
 
 ## Estado
 
-El servicio permite registrar y auditar cambios básicos de incidencias en memoria. La persistencia y la interfaz del backoffice se añadirán en pasos separados.
+El servicio cubre creación, edición, consulta, filtrado, asignación, ciclo de vida y auditoría. La interfaz está disponible en `uis/backoffice/`. La persistencia y la autenticación quedan fuera del alcance del MVP.

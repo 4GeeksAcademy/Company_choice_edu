@@ -4,17 +4,18 @@
 
 - Rama `feature/incident-manager` creada.
 - Banco de memoria, reglas, reconocimiento y plan versionados.
-- Taxonomía inicial y tipos compartidos definidos.
-- API con creación, listado, detalle, cambios de estado y auditoría.
-- Backoffice conectado a la API.
+- Catálogos oficiales y tipos compartidos definidos.
+- API con creación, edición, listado, detalle, filtros, resumen por gravedad, asignación, ciclo de vida y auditoría.
+- Backoffice conectado a la API con alta, dashboard, filtros, edición, asignación e historial.
+- Prueba automatizada del flujo completo superada.
+- Checklist final y documento de entrega revisados.
 
 ## En curso
 
-- Completar filtros, asignación editable y vista de volumen por gravedad.
-- Alinear los catálogos con cualquier briefing específico que aporte valores oficiales.
+- Ninguna tarea del MVP.
 
 ## Pendiente
 
 - Persistencia fuera de memoria.
 - Autenticación y autorización, fuera del alcance actual.
-- Revisión final del checklist y Pull Request.
+- Controles productivos de seguridad, privacidad y despliegue.
