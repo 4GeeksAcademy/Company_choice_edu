@@ -32,17 +32,18 @@ async function loadIncidents() {
 }
 
 function renderMetrics() {
-  document.querySelector("#metric-total").textContent = incidents.length;
   document.querySelector("#nav-count").textContent = incidents.length;
-  document.querySelector("#metric-open").textContent = incidents.filter((incident) => incident.status !== "closed").length;
-  document.querySelector("#metric-critical").textContent = incidents.filter((incident) => ["critical", "high"].includes(incident.severity) && incident.status !== "closed").length;
-  document.querySelector("#metric-resolved").textContent = incidents.filter((incident) => incident.status === "resolved").length;
+  for (const severity of ["critical", "high", "medium", "low"]) {
+    document.querySelector(`#metric-${severity}`).textContent = incidents.filter((incident) => incident.severity === severity && incident.status !== "closed").length;
+  }
 }
 
 function renderList() {
   const search = document.querySelector("#search-input").value.toLowerCase();
   const status = document.querySelector("#status-filter").value;
-  const visible = incidents.filter((incident) => incident.title.toLowerCase().includes(search) && (status === "all" || incident.status === status));
+  const severity = document.querySelector("#severity-filter").value;
+  const area = document.querySelector("#area-filter").value;
+  const visible = incidents.filter((incident) => incident.title.toLowerCase().includes(search) && (status === "all" || incident.status === status) && (severity === "all" || incident.severity === severity) && (area === "all" || (area === "unassigned" ? !incident.responsible_area : incident.responsible_area === area)));
   if (!visible.length) {
     listElement.innerHTML = `<div class="empty-state">No hay incidencias que coincidan con estos filtros.</div>`;
     return;
@@ -80,6 +81,8 @@ form.addEventListener("submit", async (event) => {
 
 document.querySelector("#search-input").addEventListener("input", renderList);
 document.querySelector("#status-filter").addEventListener("change", renderList);
+document.querySelector("#severity-filter").addEventListener("change", renderList);
+document.querySelector("#area-filter").addEventListener("change", renderList);
 document.querySelector("#new-incident-button").addEventListener("click", () => document.querySelector("#new-incident").scrollIntoView({ behavior: "smooth" }));
 document.querySelector("#close-detail").addEventListener("click", () => document.querySelector("#detail-content").innerHTML = `<div class="detail-placeholder"><span>→</span><p>Selecciona una incidencia para revisar sus detalles y trazabilidad.</p></div>`);
 

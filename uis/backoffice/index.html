@@ -38,16 +38,16 @@
         </header>
 
         <section class="metric-grid" aria-label="Resumen de incidencias">
-          <article class="metric-card metric-card-dark"><span>Total registradas</span><strong id="metric-total">0</strong><small>En este entorno</small></article>
-          <article class="metric-card"><span>Requieren atención</span><strong id="metric-open">0</strong><small>Sin cerrar</small></article>
-          <article class="metric-card"><span>Alta prioridad</span><strong id="metric-critical">0</strong><small>Críticas o altas</small></article>
-          <article class="metric-card"><span>Resueltas</span><strong id="metric-resolved">0</strong><small>Listas para cerrar</small></article>
+          <article class="metric-card metric-card-dark"><span>Abiertas críticas</span><strong id="metric-critical">0</strong><small>Atención inmediata</small></article>
+          <article class="metric-card"><span>Abiertas altas</span><strong id="metric-high">0</strong><small>Alta prioridad</small></article>
+          <article class="metric-card"><span>Abiertas medias</span><strong id="metric-medium">0</strong><small>Impacto limitado</small></article>
+          <article class="metric-card"><span>Abiertas bajas</span><strong id="metric-low">0</strong><small>Impacto menor</small></article>
         </section>
 
         <section class="workspace" id="incidents">
           <div class="section-heading">
             <div><p class="eyebrow">Cola de trabajo</p><h3>Incidencias recientes</h3></div>
-            <div class="toolbar"><label class="search-box"><span aria-hidden="true">⌕</span><input id="search-input" type="search" placeholder="Buscar por título..." /></label><select id="status-filter" aria-label="Filtrar por estado"><option value="all">Todos los estados</option><option value="new">Nuevas</option><option value="in-progress">En progreso</option><option value="blocked">Bloqueadas</option><option value="resolved">Resueltas</option><option value="closed">Cerradas</option></select></div>
+            <div class="toolbar"><label class="search-box"><span aria-hidden="true">⌕</span><input id="search-input" type="search" placeholder="Buscar por título..." /></label><select id="status-filter" aria-label="Filtrar por estado"><option value="all">Todos los estados</option><option value="new">Nuevas</option><option value="triaged">Clasificadas</option><option value="assigned">Asignadas</option><option value="in-progress">En progreso</option><option value="blocked">Bloqueadas</option><option value="resolved">Resueltas</option><option value="closed">Cerradas</option></select><select id="severity-filter" aria-label="Filtrar por gravedad"><option value="all">Todas las gravedades</option><option value="critical">Crítica</option><option value="high">Alta</option><option value="medium">Media</option><option value="low">Baja</option></select><select id="area-filter" aria-label="Filtrar por área"><option value="all">Todas las áreas</option><option value="clinical-operations">Operaciones clínicas</option><option value="patient-access">Experiencia del paciente</option><option value="billing-revenue">Facturación e ingresos</option><option value="compliance-data">Cumplimiento y datos</option><option value="workforce">Personas</option><option value="technology">Tecnología</option><option value="executive">Dirección ejecutiva</option><option value="unassigned">Sin asignar</option></select></div>
           </div>
           <div class="incident-list" id="incident-list"><div class="empty-state">Cargando incidencias...</div></div>
         </section>
