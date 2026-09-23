@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HealthCore Incident Desk</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand-mark" aria-hidden="true">HC</div>
+        <div>
+          <p class="eyebrow">HealthCore Digital</p>
+          <h1>Incident Desk</h1>
+        </div>
+        <nav aria-label="Navegación principal">
+          <a class="nav-item is-active" href="#incidents">Incidencias <span id="nav-count">0</span></a>
+          <a class="nav-item" href="#new-incident">Registrar nueva</a>
+        </nav>
+        <div class="sidebar-note">
+          <span class="status-dot"></span>
+          <div>
+            <strong>Red operativa</strong>
+            <small>12 clínicas conectadas</small>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="page-header">
+          <div>
+            <p class="eyebrow">Centro de operaciones · 23 septiembre 2026</p>
+            <h2>Incidencias operativas</h2>
+            <p class="lede">Una vista compartida para detectar, asignar y resolver problemas que afectan a la red.</p>
+          </div>
+          <button class="button button-primary" id="new-incident-button" type="button">+ Registrar incidencia</button>
+        </header>
+
+        <section class="metric-grid" aria-label="Resumen de incidencias">
+          <article class="metric-card metric-card-dark"><span>Total registradas</span><strong id="metric-total">0</strong><small>En este entorno</small></article>
+          <article class="metric-card"><span>Requieren atención</span><strong id="metric-open">0</strong><small>Sin cerrar</small></article>
+          <article class="metric-card"><span>Alta prioridad</span><strong id="metric-critical">0</strong><small>Críticas o altas</small></article>
+          <article class="metric-card"><span>Resueltas</span><strong id="metric-resolved">0</strong><small>Listas para cerrar</small></article>
+        </section>
+
+        <section class="workspace" id="incidents">
+          <div class="section-heading">
+            <div><p class="eyebrow">Cola de trabajo</p><h3>Incidencias recientes</h3></div>
+            <div class="toolbar"><label class="search-box"><span aria-hidden="true">⌕</span><input id="search-input" type="search" placeholder="Buscar por título..." /></label><select id="status-filter" aria-label="Filtrar por estado"><option value="all">Todos los estados</option><option value="new">Nuevas</option><option value="in-progress">En progreso</option><option value="blocked">Bloqueadas</option><option value="resolved">Resueltas</option><option value="closed">Cerradas</option></select></div>
+          </div>
+          <div class="incident-list" id="incident-list"><div class="empty-state">Cargando incidencias...</div></div>
+        </section>
+
+        <section class="new-incident" id="new-incident">
+          <div class="section-heading"><div><p class="eyebrow">Entrada operativa</p><h3>Registrar una incidencia</h3></div><span class="required-note">Todos los campos marcados son obligatorios</span></div>
+          <form id="incident-form">
+            <label class="field field-wide"><span>Título</span><input name="title" required placeholder="Ej. El EHR no está disponible en Londres" /></label>
+            <label class="field field-wide"><span>Descripción</span><textarea name="description" required rows="3" placeholder="Describe el impacto y la información disponible"></textarea></label>
+            <label class="field"><span>Tipo</span><select name="type" required><option value="">Selecciona un tipo</option><option value="clinical-operations">Operaciones clínicas</option><option value="patient-access">Acceso del paciente</option><option value="billing-revenue">Facturación e ingresos</option><option value="compliance-data">Cumplimiento y datos</option><option value="workforce">Personas y fuerza laboral</option><option value="technology">Tecnología</option></select></label>
+            <label class="field"><span>Severidad</span><select name="severity" required><option value="">Selecciona una severidad</option><option value="critical">Crítica</option><option value="high">Alta</option><option value="medium">Media</option><option value="low">Baja</option></select></label>
+            <label class="field"><span>Canal de entrada</span><select name="channel" required><option value="">Selecciona un canal</option><option value="phone">Teléfono</option><option value="email">Correo electrónico</option><option value="internal-message">Mensaje interno</option><option value="monitoring">Monitorización</option><option value="in-person">Presencial</option><option value="manual-entry">Registro manual</option></select></label>
+            <label class="field"><span>Área responsable inicial</span><select name="responsible_area"><option value="">Sin asignar todavía</option><option value="clinical-operations">Operaciones clínicas</option><option value="patient-access">Experiencia del paciente</option><option value="billing-revenue">Facturación e ingresos</option><option value="compliance-data">Cumplimiento y datos</option><option value="workforce">Personas y fuerza laboral</option><option value="technology">Tecnología</option><option value="executive">Dirección ejecutiva</option></select></label>
+            <div class="form-actions"><button class="button button-primary" type="submit">Guardar incidencia</button><span id="form-message" role="status"></span></div>
+          </form>
+        </section>
+      </main>
+
+      <aside class="detail-panel" id="detail-panel" aria-label="Detalle de incidencia">
+        <button class="close-detail" id="close-detail" type="button" aria-label="Cerrar detalle">×</button>
+        <div id="detail-content"><div class="detail-placeholder"><span>→</span><p>Selecciona una incidencia para revisar sus detalles y trazabilidad.</p></div></div>
+      </aside>
+    </div>
+    <script src="app.js"></script>
+  </body>
+</html>
