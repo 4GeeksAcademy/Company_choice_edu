@@ -78,7 +78,12 @@ def list_lots(item_id: str) -> list[InventoryLot]:
     status_code=status.HTTP_201_CREATED,
 )
 def create_movement(payload: InventoryMovementCreate) -> InventoryMovement:
-    return inventory_store.create_movement(payload)
+    try:
+        return inventory_store.create_movement(payload)
+    except KeyError as error:
+        raise HTTPException(status_code=404, detail=str(error.args[0])) from error
+    except InventoryConflictError as error:
+        raise HTTPException(status_code=409, detail=str(error)) from error
 
 
 @router.get("/items/{item_id}/movements", response_model=list[InventoryMovement])

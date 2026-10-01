@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from uuid import uuid4
 
 from .inventory_models import (
@@ -10,6 +10,7 @@ from .inventory_models import (
     InventoryLotCreate,
     InventoryMovement,
     InventoryMovementCreate,
+    LOT_CONTROLLED_CATEGORIES,
     MovementType,
 )
 
@@ -94,6 +95,25 @@ class InventoryStore:
         return [lot for lot in self._lots.values() if lot.item_id == item_id]
 
     def create_movement(self, payload: InventoryMovementCreate) -> InventoryMovement:
+        item = self.get_item(payload.item_id)
+        if item is None:
+            raise KeyError("Inventory item not found")
+        lot = self._lots.get(payload.lot_id) if payload.lot_id else None
+        if payload.lot_id and lot is None:
+            raise KeyError("Inventory lot not found")
+        if lot and lot.item_id != payload.item_id:
+            raise InventoryConflictError("Lot does not belong to item")
+        if item.category in LOT_CONTROLLED_CATEGORIES and lot is None:
+            raise InventoryConflictError("Lot is required for this item")
+        if (
+            payload.movement_type == MovementType.outbound
+            and lot
+            and lot.expiry_date < date.today()
+        ):
+            raise InventoryConflictError("Expired lot cannot be used for outbound movement")
+        delta = -payload.quantity if payload.movement_type == MovementType.outbound else payload.quantity
+        if self.available_stock(payload.item_id) + delta < 0:
+            raise InventoryConflictError("Movement would leave stock negative")
         movement = InventoryMovement(
             id=str(uuid4()),
             created_at=datetime.now(timezone.utc),
