@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HealthCore Inventory</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="inventory.css" />
+  </head>
+  <body>
+    <div class="inventory-shell">
+      <aside class="sidebar">
+        <div class="brand-mark" aria-hidden="true">HC</div>
+        <div><p class="eyebrow">HealthCore Digital</p><h1>Inventory</h1></div>
+        <nav aria-label="Navegación principal">
+          <a class="nav-item" href="index.html">Incidencias</a>
+          <a class="nav-item is-active" href="inventory.html">Inventario</a>
+        </nav>
+      </aside>
+      <main class="main-content">
+        <header class="page-header">
+          <div><p class="eyebrow">Soporte de operaciones</p><h2>Inventario por clínica</h2></div>
+          <label class="field compact"><span>Clínica</span><select id="clinic-filter"><option value="">Todas</option></select></label>
+        </header>
+        <section class="inventory-metrics" aria-label="Resumen">
+          <div><span>Artículos</span><strong id="item-count">0</strong></div>
+          <div class="reorder-metric"><span>Bajo reorden</span><strong id="reorder-count">0</strong></div>
+        </section>
+        <section class="workspace">
+          <div class="section-heading"><div><p class="eyebrow">Stock derivado</p><h3>Artículos</h3></div><label><input id="reorder-filter" type="checkbox" /> Solo bajo reorden</label></div>
+          <div class="table-wrap"><table><thead><tr><th>Artículo</th><th>Clínica</th><th>Categoría</th><th>Stock</th><th>Umbral</th><th>Estado</th></tr></thead><tbody id="inventory-list"></tbody></table></div>
+          <div id="inventory-detail" class="inventory-detail">Selecciona un artículo para consultar lotes y movimientos.</div>
+        </section>
+        <section class="inventory-forms">
+          <form id="item-form"><h3>Nuevo artículo</h3><input name="name" required placeholder="Nombre" /><input name="clinic_location" required placeholder="Clínica" /><select name="country" required><option value="us">US</option><option value="uk">UK</option></select><select name="category" required><option value="ppe">EPP</option><option value="medical_consumables">Consumible médico</option><option value="otc_medication">Medicación OTC</option><option value="clinical_equipment">Equipo clínico</option></select><select name="unit_of_measure" required><option value="unit">Unidad</option><option value="box">Caja</option><option value="ml">ml</option><option value="tablet">Tableta</option></select><input name="reorder_point" type="number" min="0" required placeholder="Punto de reorden" /><button class="button button-primary">Guardar artículo</button></form>
+          <form id="lot-form"><h3>Nuevo lote</h3><select class="item-select" name="item_id" required></select><input name="lot_code" required placeholder="Código" /><label class="field"><span>Caducidad</span><input name="expiry_date" type="date" required /></label><button class="button button-primary">Guardar lote</button></form>
+          <form id="movement-form"><h3>Nuevo movimiento</h3><select class="item-select" name="item_id" required></select><select name="lot_id"><option value="">Sin lote</option></select><select name="movement_type" required><option value="inbound">Entrada</option><option value="outbound">Salida</option><option value="adjustment">Ajuste</option></select><input name="quantity" type="number" step="any" required placeholder="Cantidad" /><input name="reason" placeholder="Motivo del ajuste" /><button class="button button-primary">Registrar movimiento</button></form>
+        </section>
+        <p id="inventory-message" role="status"></p>
+      </main>
+    </div>
+    <script src="inventory.js"></script>
+  </body>
+</html>
