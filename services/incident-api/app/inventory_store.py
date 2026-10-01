@@ -1,4 +1,4 @@
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from uuid import uuid4
 
 from .inventory_models import (
@@ -6,6 +6,7 @@ from .inventory_models import (
     InventoryItemCreate,
     InventoryItemUpdate,
     InventoryItemView,
+    InventoryCategory,
     InventoryLot,
     InventoryLotCreate,
     InventoryMovement,
@@ -24,11 +25,63 @@ class InventoryStore:
         self._items: dict[str, InventoryItem] = {}
         self._lots: dict[str, InventoryLot] = {}
         self._movements: list[InventoryMovement] = []
+        self.load_seed()
 
     def clear(self) -> None:
         self._items.clear()
         self._lots.clear()
         self._movements.clear()
+
+    def load_seed(self) -> None:
+        self.clear()
+        clinics = (
+            ("Austin Central", "us"),
+            ("Boston North", "us"),
+            ("London City", "uk"),
+            ("Manchester South", "uk"),
+        )
+        categories = tuple(InventoryCategory)
+        units = ("box", "box", "tablet", "unit")
+        expired_added = False
+        for index in range(15):
+            category = categories[index % len(categories)]
+            clinic, country = clinics[index % len(clinics)]
+            item = self.create_item(InventoryItemCreate(
+                clinic_location=clinic,
+                country=country,
+                name=f"Operational supply {index + 1}",
+                category=category,
+                unit_of_measure=units[index % len(units)],
+                reorder_point=10 if index < 2 else 3,
+            ))
+            lot_id = None
+            if category in LOT_CONTROLLED_CATEGORIES:
+                if not expired_added:
+                    self.create_lot(InventoryLotCreate(
+                        item_id=item.id,
+                        lot_code="EXPIRED-001",
+                        expiry_date=date.today() - timedelta(days=1),
+                        received_at=datetime.now(timezone.utc),
+                    ))
+                    expired_added = True
+                lot_id = self.create_lot(InventoryLotCreate(
+                    item_id=item.id,
+                    lot_code=f"ACTIVE-{index + 1:03d}",
+                    expiry_date=date.today() + timedelta(days=365),
+                    received_at=datetime.now(timezone.utc),
+                )).id
+            for movement_type, quantity, reason in (
+                (MovementType.inbound, 10, None),
+                (MovementType.outbound, 2, None),
+                (MovementType.adjustment, 1, "cycle count correction"),
+            ):
+                self.create_movement(InventoryMovementCreate(
+                    item_id=item.id,
+                    lot_id=lot_id,
+                    movement_type=movement_type,
+                    quantity=quantity,
+                    reason=reason,
+                ))
 
     def create_item(self, payload: InventoryItemCreate) -> InventoryItem:
         now = datetime.now(timezone.utc)
