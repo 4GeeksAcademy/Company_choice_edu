@@ -9,7 +9,7 @@ Cada tarea se implementa y verifica de forma independiente. El mensaje del commi
 | [x] | **INV-T003 — Registro de lotes** | INV-002, INV-003, INV-008 | API crea y lista lotes, garantiza unicidad por artículo y valida pertenencia y obligatoriedad; pruebas de lotes pasan. |
 | [x] | **INV-T004 — Libro de movimientos y stock derivado** | INV-004, INV-005 | API registra y lista movimientos y calcula stock sin campo editable; pruebas de entrada, salida y ajuste pasan. |
 | [x] | **INV-T005 — Rechazos atómicos de movimientos** | INV-006, INV-007, INV-008, INV-009 | API rechaza saldo negativo y referencias ausentes, cruzadas o caducadas sin mutar el libro; pruebas de comportamiento no deseado pasan. |
-| [ ] | **INV-T006 — Consulta de punto de reorden** | INV-010, INV-011 | Listado y detalle calculan y filtran la señal inclusiva de reorden por clínica; pruebas de límite pasan. |
+| [x] | **INV-T006 — Consulta de punto de reorden** | INV-010, INV-011 | Listado y detalle calculan y filtran la señal inclusiva de reorden por clínica; pruebas de límite pasan. |
 | [ ] | **INV-T007 — Conjunto semilla seguro** | INV-012, INV-013 | Store carga datos deterministas con la cobertura exigida y cero PHI; prueba de auditoría de semilla pasa. |
 | [ ] | **INV-T008 — Backoffice de inventario** | INV-001, INV-003, INV-004, INV-010, INV-011 | Vista responsive permite operar artículos, lotes y movimientos y hace visible el reorden por clínica; comprobación funcional y visual pasa. |
 | [ ] | **INV-T009 — Documentación y matriz de trazabilidad** | INV-001 a INV-013 | README de ejecución y matriz `requisito → prueba → commit` reflejan el sistema verificado. |

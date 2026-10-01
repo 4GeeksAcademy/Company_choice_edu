@@ -23,8 +23,17 @@ def create_item(payload: InventoryItemCreate) -> InventoryItem:
 
 
 @router.get("/items", response_model=list[InventoryItemView])
-def list_items(clinic_location: str | None = None) -> list[InventoryItemView]:
-    return [inventory_store.item_view(item) for item in inventory_store.list_items(clinic_location)]
+def list_items(
+    clinic_location: str | None = None,
+    below_reorder: bool | None = None,
+) -> list[InventoryItemView]:
+    items = [
+        inventory_store.item_view(item)
+        for item in inventory_store.list_items(clinic_location)
+    ]
+    if below_reorder is None:
+        return items
+    return [item for item in items if item.below_reorder == below_reorder]
 
 
 @router.get("/items/{item_id}", response_model=InventoryItemView)
