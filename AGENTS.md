@@ -1,5 +1,14 @@
 # Reglas de trabajo del proyecto
 
+## Inicio de sesión obligatorio
+
+Antes de editar, leer en este orden:
+
+1. `memory-bank/projectbrief.md`
+2. `memory-bank/techContext.md`
+3. `memory-bank/progress.md`
+4. `CONTEXT-company.md` y el archivo `CONTEXT*.md` relacionado con la tarea
+
 ## Organización del monorepo
 
 - Las interfaces de usuario se colocan en `uis/`.
@@ -28,7 +37,24 @@
 ## Documentación y cambios
 
 - Documentar cada componente nuevo con un README cuando corresponda.
-- Validar los cambios antes de confirmarlos.
 - Crear commits pequeños y separados por etapa relevante.
 - Usar mensajes de commit descriptivos.
-- Trabajar en la rama `feature/incident-manager` para este desarrollo.
+- Trabajar en la rama `feature/agent-memory-bank` para este hito.
+
+## Flujo previo a cada commit
+
+1. Ejecutar `npm run typecheck` desde la raíz para cambios TypeScript.
+2. Ejecutar `npm run build` y las pruebas específicas del servicio afectado.
+3. Actualizar `memory-bank/progress.md` cuando cambie el comportamiento o el estado del proyecto.
+4. Ejecutar `git diff --check` y revisar `git diff --stat` para confirmar el alcance.
+5. Confirmar que no se incluyen secretos, PHI ni artefactos generados.
+
+## Áreas protegidas
+
+No modificar sin confirmación humana explícita:
+
+- `.github/workflows/` y cualquier configuración de CI/CD.
+- `package-lock.json` u otros lockfiles generados, salvo actualización de dependencias aprobada.
+- Migraciones, credenciales y configuración de despliegue bajo `infra/`.
+- Una aplicación distinta de la indicada en la tarea.
+- Contratos públicos de `services/` o `packages/` que rompan consumidores existentes.

@@ -4,19 +4,22 @@ Interfaz web para gestionar incidencias e inventario operativo.
 
 ## Ejecución local
 
-1. Inicia la API desde `services/incident-api`:
+1. Desde la raíz, instala dependencias e inicia la API:
 
    ```bash
+   npm install
+   cd services/incident-api
    .venv/bin/uvicorn app.main:app --reload --port 8000
    ```
 
-2. En otra terminal, desde `uis/backoffice`, inicia el servidor estático:
+2. En otra terminal, desde la raíz, inicia el backoffice:
 
    ```bash
-   python -m http.server 4173
+   npm run dev:backoffice
    ```
 
-3. Abre `http://localhost:4173` para incidencias o
-   `http://localhost:4173/inventory.html` para inventario.
+3. Abre `http://localhost:3001`.
 
-La interfaz usa `http://localhost:8000` como URL de la API.
+La vista Next.js importa `getOpenIncidentSummary` desde `@repo/shared-types` y
+muestra el resumen calculado por la API. Usa `INCIDENT_API_URL` para cambiar
+`http://127.0.0.1:8000`.

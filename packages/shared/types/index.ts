@@ -1,9 +1,4 @@
-/**
- * Shared types for transversal project apps.
- * Extend with domain types (e.g. Location, Sale, Customer) as needed.
- */
-
-// Example placeholder — replace with your domain types
+/** Shared HealthCore contracts consumed across the monorepo. */
 export type Id = string;
 
 export interface BaseEntity {
@@ -66,6 +61,22 @@ export interface IncidentAuditEvent {
   newValue: string;
   changedBy: Id;
   changedAt: string;
+}
+
+export type IncidentSeveritySummary = Record<IncidentSeverity, number>;
+
+export async function getOpenIncidentSummary(
+  apiUrl: string,
+): Promise<IncidentSeveritySummary> {
+  const response = await fetch(`${apiUrl}/incidents/summary/open-by-severity`, {
+    cache: "no-store",
+  });
+
+  if (!response.ok) {
+    throw new Error("Incident summary is unavailable");
+  }
+
+  return response.json() as Promise<IncidentSeveritySummary>;
 }
 
 export type InventoryUnit = "unit" | "box" | "ml" | "tablet";
