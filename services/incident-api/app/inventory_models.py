@@ -42,7 +42,9 @@ SENSITIVE_TEXT_PATTERNS = (
 )
 
 
-def reject_sensitive_text(value: str) -> str:
+def reject_sensitive_text(value: str | None) -> str | None:
+    if value is None:
+        return value
     if any(pattern.search(value) for pattern in SENSITIVE_TEXT_PATTERNS):
         raise ValueError("Inventory text must contain operational details only")
     return value

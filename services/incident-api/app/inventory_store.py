@@ -5,8 +5,12 @@ from .inventory_models import (
     InventoryItem,
     InventoryItemCreate,
     InventoryItemUpdate,
+    InventoryItemView,
     InventoryLot,
     InventoryLotCreate,
+    InventoryMovement,
+    InventoryMovementCreate,
+    MovementType,
 )
 
 
@@ -18,7 +22,7 @@ class InventoryStore:
     def __init__(self) -> None:
         self._items: dict[str, InventoryItem] = {}
         self._lots: dict[str, InventoryLot] = {}
-        self._movements: list[object] = []
+        self._movements: list[InventoryMovement] = []
 
     def clear(self) -> None:
         self._items.clear()
@@ -88,3 +92,34 @@ class InventoryStore:
         if item_id not in self._items:
             raise KeyError("Inventory item not found")
         return [lot for lot in self._lots.values() if lot.item_id == item_id]
+
+    def create_movement(self, payload: InventoryMovementCreate) -> InventoryMovement:
+        movement = InventoryMovement(
+            id=str(uuid4()),
+            created_at=datetime.now(timezone.utc),
+            **payload.model_dump(),
+        )
+        self._movements.append(movement)
+        return movement
+
+    def list_movements(self, item_id: str) -> list[InventoryMovement]:
+        return [movement for movement in self._movements if movement.item_id == item_id]
+
+    def available_stock(self, item_id: str) -> float:
+        stock = 0.0
+        for movement in self.list_movements(item_id):
+            if movement.movement_type == MovementType.inbound:
+                stock += movement.quantity
+            elif movement.movement_type == MovementType.outbound:
+                stock -= movement.quantity
+            else:
+                stock += movement.quantity
+        return stock
+
+    def item_view(self, item: InventoryItem) -> InventoryItemView:
+        stock = self.available_stock(item.id)
+        return InventoryItemView(
+            **item.model_dump(),
+            available_stock=stock,
+            below_reorder=stock <= item.reorder_point,
+        )

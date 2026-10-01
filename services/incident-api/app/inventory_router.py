@@ -4,8 +4,11 @@ from .inventory_models import (
     InventoryItem,
     InventoryItemCreate,
     InventoryItemUpdate,
+    InventoryItemView,
     InventoryLot,
     InventoryLotCreate,
+    InventoryMovement,
+    InventoryMovementCreate,
 )
 from .inventory_store import InventoryConflictError, InventoryStore
 
@@ -19,17 +22,17 @@ def create_item(payload: InventoryItemCreate) -> InventoryItem:
     return inventory_store.create_item(payload)
 
 
-@router.get("/items", response_model=list[InventoryItem])
-def list_items(clinic_location: str | None = None) -> list[InventoryItem]:
-    return inventory_store.list_items(clinic_location)
+@router.get("/items", response_model=list[InventoryItemView])
+def list_items(clinic_location: str | None = None) -> list[InventoryItemView]:
+    return [inventory_store.item_view(item) for item in inventory_store.list_items(clinic_location)]
 
 
-@router.get("/items/{item_id}", response_model=InventoryItem)
-def get_item(item_id: str) -> InventoryItem:
+@router.get("/items/{item_id}", response_model=InventoryItemView)
+def get_item(item_id: str) -> InventoryItemView:
     item = inventory_store.get_item(item_id)
     if item is None:
         raise HTTPException(status_code=404, detail="Inventory item not found")
-    return item
+    return inventory_store.item_view(item)
 
 
 @router.patch("/items/{item_id}", response_model=InventoryItem)
@@ -67,4 +70,18 @@ def list_lots(item_id: str) -> list[InventoryLot]:
         return inventory_store.list_lots(item_id)
     except KeyError as error:
         raise HTTPException(status_code=404, detail=str(error.args[0])) from error
+
+
+@router.post(
+    "/movements",
+    response_model=InventoryMovement,
+    status_code=status.HTTP_201_CREATED,
+)
+def create_movement(payload: InventoryMovementCreate) -> InventoryMovement:
+    return inventory_store.create_movement(payload)
+
+
+@router.get("/items/{item_id}/movements", response_model=list[InventoryMovement])
+def list_movements(item_id: str) -> list[InventoryMovement]:
+    return inventory_store.list_movements(item_id)
 
