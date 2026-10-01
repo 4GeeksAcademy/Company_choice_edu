@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 
+from .inventory_router import router as inventory_router
 from .models import (
     Incident,
     IncidentArea,
@@ -31,6 +32,7 @@ app.add_middleware(
 )
 
 store = IncidentStore()
+app.include_router(inventory_router)
 
 
 @app.get("/health", tags=["system"])
