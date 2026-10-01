@@ -1,7 +1,13 @@
 from datetime import datetime, timezone
 from uuid import uuid4
 
-from .inventory_models import InventoryItem, InventoryItemCreate, InventoryItemUpdate
+from .inventory_models import (
+    InventoryItem,
+    InventoryItemCreate,
+    InventoryItemUpdate,
+    InventoryLot,
+    InventoryLotCreate,
+)
 
 
 class InventoryConflictError(Exception):
@@ -11,7 +17,7 @@ class InventoryConflictError(Exception):
 class InventoryStore:
     def __init__(self) -> None:
         self._items: dict[str, InventoryItem] = {}
-        self._lots: dict[str, object] = {}
+        self._lots: dict[str, InventoryLot] = {}
         self._movements: list[object] = []
 
     def clear(self) -> None:
@@ -65,3 +71,20 @@ class InventoryStore:
             raise InventoryConflictError("Item history must be preserved")
         del self._items[item_id]
         return True
+
+    def create_lot(self, payload: InventoryLotCreate) -> InventoryLot:
+        if payload.item_id not in self._items:
+            raise KeyError("Inventory item not found")
+        if any(
+            lot.item_id == payload.item_id and lot.lot_code == payload.lot_code
+            for lot in self._lots.values()
+        ):
+            raise InventoryConflictError("Lot code already exists for item")
+        lot = InventoryLot(id=str(uuid4()), **payload.model_dump())
+        self._lots[lot.id] = lot
+        return lot
+
+    def list_lots(self, item_id: str) -> list[InventoryLot]:
+        if item_id not in self._items:
+            raise KeyError("Inventory item not found")
+        return [lot for lot in self._lots.values() if lot.item_id == item_id]

@@ -1,6 +1,12 @@
 from fastapi import APIRouter, HTTPException, Response, status
 
-from .inventory_models import InventoryItem, InventoryItemCreate, InventoryItemUpdate
+from .inventory_models import (
+    InventoryItem,
+    InventoryItemCreate,
+    InventoryItemUpdate,
+    InventoryLot,
+    InventoryLotCreate,
+)
 from .inventory_store import InventoryConflictError, InventoryStore
 
 
@@ -43,4 +49,22 @@ def delete_item(item_id: str) -> Response:
     if not deleted:
         raise HTTPException(status_code=404, detail="Inventory item not found")
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+@router.post("/lots", response_model=InventoryLot, status_code=status.HTTP_201_CREATED)
+def create_lot(payload: InventoryLotCreate) -> InventoryLot:
+    try:
+        return inventory_store.create_lot(payload)
+    except KeyError as error:
+        raise HTTPException(status_code=404, detail=str(error.args[0])) from error
+    except InventoryConflictError as error:
+        raise HTTPException(status_code=409, detail=str(error)) from error
+
+
+@router.get("/items/{item_id}/lots", response_model=list[InventoryLot])
+def list_lots(item_id: str) -> list[InventoryLot]:
+    try:
+        return inventory_store.list_lots(item_id)
+    except KeyError as error:
+        raise HTTPException(status_code=404, detail=str(error.args[0])) from error
 
