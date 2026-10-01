@@ -1,6 +1,6 @@
-# Incident API
+# Operations API
 
-API centralizada para registrar y gestionar incidencias operativas de HealthCore.
+API centralizada para gestionar incidencias e inventario operativo de HealthCore.
 
 ## Tecnología
 
@@ -32,6 +32,12 @@ La documentación interactiva estará disponible en `http://127.0.0.1:8000/docs`
 - `PATCH /incidents/{incident_id}/status`: cambia su estado y registra el actor y la fecha.
 - `PATCH /incidents/{incident_id}/responsible-area`: cambia el área responsable y registra el actor y la fecha.
 - `GET /incidents/{incident_id}/audit`: devuelve el historial de cambios.
+- `GET|POST /inventory/items`: lista o crea artículos de inventario.
+- `GET|PATCH|DELETE /inventory/items/{item_id}`: consulta, actualiza o elimina un artículo.
+- `GET /inventory/items/{item_id}/lots`: lista los lotes de un artículo.
+- `GET /inventory/items/{item_id}/movements`: lista sus movimientos.
+- `POST /inventory/lots`: registra un lote.
+- `POST /inventory/movements`: registra una entrada, salida o ajuste.
 
 Los datos se almacenan temporalmente en memoria y se pierden al reiniciar el servicio.
 

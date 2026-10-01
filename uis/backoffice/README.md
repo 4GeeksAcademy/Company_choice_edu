@@ -1,6 +1,6 @@
 # HealthCore Backoffice
 
-Interfaz web para registrar y revisar incidencias operativas.
+Interfaz web para gestionar incidencias e inventario operativo.
 
 ## Ejecución local
 
@@ -16,6 +16,7 @@ Interfaz web para registrar y revisar incidencias operativas.
    python -m http.server 4173
    ```
 
-3. Abre `http://localhost:4173`.
+3. Abre `http://localhost:4173` para incidencias o
+   `http://localhost:4173/inventory.html` para inventario.
 
 La interfaz usa `http://localhost:8000` como URL de la API.
