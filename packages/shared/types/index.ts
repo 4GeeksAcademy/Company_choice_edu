@@ -67,3 +67,41 @@ export interface IncidentAuditEvent {
   changedBy: Id;
   changedAt: string;
 }
+
+export type InventoryUnit = "unit" | "box" | "ml" | "tablet";
+export type InventoryCategory =
+  | "ppe"
+  | "medical_consumables"
+  | "otc_medication"
+  | "clinical_equipment";
+export type InventoryCountry = "us" | "uk";
+export type InventoryMovementType = "inbound" | "outbound" | "adjustment";
+
+export interface InventoryItem extends BaseEntity {
+  clinicLocation: string;
+  country: InventoryCountry;
+  name: string;
+  category: InventoryCategory;
+  unitOfMeasure: InventoryUnit;
+  reorderPoint: number;
+  availableStock: number;
+  belowReorder: boolean;
+}
+
+export interface InventoryLot {
+  id: Id;
+  itemId: Id;
+  lotCode: string;
+  expiryDate: string;
+  receivedAt: string;
+}
+
+export interface InventoryMovement {
+  id: Id;
+  itemId: Id;
+  lotId?: Id;
+  movementType: InventoryMovementType;
+  quantity: number;
+  reason?: string;
+  createdAt: string;
+}

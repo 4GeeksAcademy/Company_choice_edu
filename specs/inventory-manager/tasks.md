@@ -4,7 +4,7 @@ Cada tarea se implementa y verifica de forma independiente. El mensaje del commi
 
 | Estado | Tarea | Criterios | Resultado verificable |
 |---|---|---|---|
-| [ ] | **INV-T001 — Contratos de dominio** | INV-001, INV-002, INV-004, INV-012 | Modelos Pydantic y tipos compartidos restringen catálogos, cantidades, campos adicionales y texto sensible; sus pruebas de validación pasan. |
+| [x] | **INV-T001 — Contratos de dominio** | INV-001, INV-002, INV-004, INV-012 | Modelos Pydantic y tipos compartidos restringen catálogos, cantidades, campos adicionales y texto sensible; sus pruebas de validación pasan. |
 | [ ] | **INV-T002 — CRUD de artículos por clínica** | INV-001, INV-011 | API crea, lista, consulta, actualiza y elimina artículos por clínica; rechaza borrar artículos con historial; pruebas CRUD pasan. |
 | [ ] | **INV-T003 — Registro de lotes** | INV-002, INV-003, INV-008 | API crea y lista lotes, garantiza unicidad por artículo y valida pertenencia y obligatoriedad; pruebas de lotes pasan. |
 | [ ] | **INV-T004 — Libro de movimientos y stock derivado** | INV-004, INV-005 | API registra y lista movimientos y calcula stock sin campo editable; pruebas de entrada, salida y ajuste pasan. |
