@@ -1,0 +1,37 @@
+# Tareas del gestor de inventario
+
+Cada tarea se implementa y verifica de forma independiente. El mensaje del commit correspondiente debe incluir su ID.
+
+| Estado | Tarea | Criterios | Resultado verificable |
+|---|---|---|---|
+| [x] | **INV-T001 — Contratos de dominio** | INV-001, INV-002, INV-004, INV-012 | Modelos Pydantic y tipos compartidos restringen catálogos, cantidades, campos adicionales y texto sensible; sus pruebas de validación pasan. |
+| [x] | **INV-T002 — CRUD de artículos por clínica** | INV-001, INV-011 | API crea, lista, consulta, actualiza y elimina artículos por clínica; rechaza borrar artículos con historial; pruebas CRUD pasan. |
+| [x] | **INV-T003 — Registro de lotes** | INV-002, INV-003, INV-008 | API crea y lista lotes, garantiza unicidad por artículo y valida pertenencia y obligatoriedad; pruebas de lotes pasan. |
+| [x] | **INV-T004 — Libro de movimientos y stock derivado** | INV-004, INV-005 | API registra y lista movimientos y calcula stock sin campo editable; pruebas de entrada, salida y ajuste pasan. |
+| [x] | **INV-T005 — Rechazos atómicos de movimientos** | INV-006, INV-007, INV-008, INV-009 | API rechaza saldo negativo y referencias ausentes, cruzadas o caducadas sin mutar el libro; pruebas de comportamiento no deseado pasan. |
+| [x] | **INV-T006 — Consulta de punto de reorden** | INV-010, INV-011 | Listado y detalle calculan y filtran la señal inclusiva de reorden por clínica; pruebas de límite pasan. |
+| [x] | **INV-T007 — Conjunto semilla seguro** | INV-012, INV-013 | Store carga datos deterministas con la cobertura exigida y cero PHI; prueba de auditoría de semilla pasa. |
+| [x] | **INV-T008 — Backoffice de inventario** | INV-001, INV-003, INV-004, INV-010, INV-011 | Vista responsive permite operar artículos, lotes y movimientos y hace visible el reorden por clínica; comprobación funcional y visual pasa. |
+| [x] | **INV-T009 — Documentación y matriz de trazabilidad** | INV-001 a INV-013 | README de ejecución y matriz `requisito → prueba → commit` reflejan el sistema verificado. |
+
+## Matriz de trazabilidad
+
+| Requisito | Prueba | Commit de tarea |
+|---|---|---|
+| INV-001 | `test_inventory_models.py`, `test_inventory_items.py` | `223c973` (INV-T001), `8a301e1` (INV-T002) |
+| INV-002 | `test_inventory_movement_rejections.py` | `33a7442` (INV-T005) |
+| INV-003 | `test_inventory_lots.py` | `9f2bf7f` (INV-T003) |
+| INV-004 | `test_inventory_models.py`, `test_inventory_movements.py` | `d2b5695` (INV-T004) |
+| INV-005 | `test_inventory_movements.py` | `d2b5695` (INV-T004) |
+| INV-006, INV-007 | `test_inventory_movement_rejections.py` | `33a7442` (INV-T005) |
+| INV-008 | `test_inventory_lots.py`, `test_inventory_movement_rejections.py` | `9f2bf7f` (INV-T003), `33a7442` (INV-T005) |
+| INV-009 | `test_inventory_movement_rejections.py` | `33a7442` (INV-T005) |
+| INV-010, INV-011 | `test_inventory_reorder.py`, `test_inventory_items.py` | `8f526ff` (INV-T006), `2aa6bb1` (INV-T008) |
+| INV-012 | `test_inventory_models.py`, `test_inventory_seed.py` | `223c973` (INV-T001), `3deaef0` (INV-T007) |
+| INV-013 | `test_inventory_seed.py` | `3deaef0` (INV-T007) |
+
+## Regeneración por cambios de requisito
+
+Ante un cambio, se editará primero `spec.md`; después se actualizará `plan.md` solo si cambia una decisión arquitectónica y se reemplazarán únicamente las filas afectadas de esta tabla. El PR deberá identificar las secciones modificadas y los IDs de tarea regenerados.
+
+No se recibió un cambio de requisito posterior a la especificación inicial en esta entrega. Por tanto, no hubo secciones modificadas ni tareas regeneradas; el PR lo declara como no aplicable.
